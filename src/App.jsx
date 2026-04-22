@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Menu, MessageCircle, X } from 'lucide-react';
+import { Menu, MessageCircle, Phone, X } from 'lucide-react';
 import heroImage from './assets/728642-Suriname-Flag-Stripes.jpg';
 import featureBamiImage from './assets/surinaamse-nasi.jpg';
 import featurePomImage from './assets/Surinaams-broodje-pom-3.jpg';
 import featureRotiImage from './assets/Surinaamse-roti-3-1170x780.jpg';
 import menuHeroImage from './assets/surinaamse-loempia.jpg';
+import partyBalloonsImage from './assets/Su-ballonen.png';
+import thuisbezorgdLogo from './assets/thuisbezorgd_logo_app-e1672662946980.png';
 import logo from './assets/SUSANLOGO1.png';
 
 const featuredDishes = [
@@ -40,136 +42,237 @@ const contactDetails = {
   whatsappLabel: 'Bestel via WhatsApp',
 };
 
+const orderDetails = {
+  href: 'https://mylightspeed.app/RWFNWBJG/C-ordering/menu',
+  label: 'Bestel nu',
+};
+
+const socialLinks = [
+  {
+    label: 'Facebook',
+    href: 'https://www.facebook.com/kitchensusan',
+    shortLabel: 'f',
+  },
+  {
+    label: 'Instagram',
+    href: '',
+    shortLabel: 'ig',
+  },
+  {
+    label: 'TikTok',
+    href: '',
+    shortLabel: 'tt',
+  },
+];
+
+const deliveryPartners = {
+  thuisbezorgd: {
+    href: 'https://www.thuisbezorgd.nl/menu/kitchen-susan',
+    label: 'Bestel via Thuisbezorgd',
+  },
+};
+
 const menuCategories = [
   {
-    title: 'Hoofdgerechten',
+    title: 'Belegde broodjes',
     items: [
-      {
-        name: 'Roti kip speciaal',
-        description: 'Zachte roti, kruidige kip, aardappel, kousenband en huisgemaakte masala.',
-        price: 'EUR 14,00',
-      },
-      {
-        name: 'Bami kip',
-        description: 'Gebakken bami met malse kip, groenten en een rijke Surinaamse ketjap-smaak.',
-        price: 'EUR 13,50',
-      },
-      {
-        name: 'Witte rijst met pom',
-        description: 'Surinaamse ovenschotel van pomtajer met witte rijst, sambal en zuur.',
-        price: 'EUR 13,50',
-      },
-      {
-        name: 'Nasi garnalen',
-        description: 'Gebakken nasi met garnalen, groenten en huisgemaakte kruidenmix.',
-        price: 'EUR 16,50',
-      },
+      { name: 'Kerrie Kip', price: 'EUR 5,00' },
+      { name: 'Ketjap Kip', price: 'EUR 5,00' },
+      { name: 'Cha Sieuw Kip', price: 'EUR 5,00' },
+      { name: 'Dynamite Kip', price: 'EUR 5,00' },
+      { name: 'Hete Kip', price: 'EUR 5,00' },
+      { name: 'Kerrie Ei', price: 'EUR 5,00' },
+      { name: 'Pom', price: 'EUR 5,00' },
+      { name: 'Kip Fashong', price: 'EUR 6,00' },
+      { name: 'Garnalen', price: 'EUR 6,00' },
+      { name: 'Garnalen Kouseband', price: 'EUR 6,00' },
+      { name: 'Bakkeljauw', price: 'EUR 5,00' },
+      { name: 'Tempe', price: 'EUR 5,00' },
+      { name: 'Aardappel/Kouseband', price: 'EUR 5,00' },
     ],
   },
   {
-    title: 'Broodjes',
+    title: 'Soepen',
     items: [
-      {
-        name: 'Broodje kerrie kip',
-        description: 'Vers broodje met romige kerrie kip en frisse toppings.',
-        price: 'EUR 5,00',
-      },
-      {
-        name: 'Broodje cha sieuw kip',
-        description: 'Zoet-hartige kip op een zacht broodje met Surinaamse streetfood-vibe.',
-        price: 'EUR 5,00',
-      },
-      {
-        name: 'Broodje pom',
-        description: 'Een geliefde klassieker, royaal belegd en perfect voor lunch.',
-        price: 'EUR 5,00',
-      },
-      {
-        name: 'Broodje garnalen kouseband',
-        description: 'Malse garnalen met kouseband en kruidige saus op vers brood.',
-        price: 'EUR 6,00',
-      },
+      { name: 'Saoto Soep', price: 'EUR 7,50' },
+      { name: 'Saoto Soep Vega', price: 'EUR 7,50' },
+    ],
+  },
+  {
+    title: 'Bruine nasi / witte nasi / bami',
+    items: [
+      { name: 'Ketjap Kip', price: 'EUR 12,50' },
+      { name: 'Ketjap Kipfilet', price: 'EUR 13,50' },
+      { name: 'Kip Sate', price: 'EUR 15,00' },
+      { name: 'Cha Sieuw Kip', price: 'EUR 12,50' },
+      { name: 'Cha Sieuw Kipfilet', price: 'EUR 13,50' },
+      { name: 'Kerrie Kip', price: 'EUR 12,50' },
+      { name: 'Kerrie Kipfilet', price: 'EUR 13,50' },
+      { name: 'Garnalen', price: 'EUR 16,00' },
+      { name: 'Vega', price: 'EUR 11,50' },
+      { name: 'Blanco', price: 'EUR 9,00' },
+    ],
+  },
+  {
+    title: 'Witte rijst met groenten',
+    items: [
+      { name: 'Ketjap Kip', price: 'EUR 12,50' },
+      { name: 'Ketjap Kipfilet', price: 'EUR 13,50' },
+      { name: 'Cha Sieuw Kip', price: 'EUR 12,50' },
+      { name: 'Cha Sieuw Kipfilet', price: 'EUR 13,50' },
+      { name: 'Hete Kip', price: 'EUR 13,50' },
+      { name: 'Kerrie Kip', price: 'EUR 12,50' },
+      { name: 'Kerrie Kip Speciaal', price: 'EUR 13,50' },
+      { name: 'Kerrie Kipfilet', price: 'EUR 13,50' },
+      { name: 'Kerrie Kipfilet Speciaal', price: 'EUR 14,50' },
+      { name: 'Pom', price: 'EUR 16,50' },
+      { name: 'Doks', price: 'EUR 19,00' },
+      { name: 'Garnalen', price: 'EUR 16,00' },
+      { name: 'Bakkeljauw (vis)', price: 'EUR 16,00' },
+      { name: 'Tempe', price: 'EUR 11,50' },
+      { name: 'Vega', price: 'EUR 11,50' },
+    ],
+  },
+  {
+    title: "Roti's",
+    items: [
+      { name: 'Kerrie Kip', price: 'EUR 12,50' },
+      { name: 'Kerrie Kip Speciaal', price: 'EUR 14,00' },
+      { name: 'Kerrie Kipfilet', price: 'EUR 13,50' },
+      { name: 'Kerrie Kipfilet Speciaal', price: 'EUR 15,00' },
+      { name: 'Ketjap Kip', price: 'EUR 12,50' },
+      { name: 'Ketjap Kipfilet', price: 'EUR 13,50' },
+      { name: 'Doks', price: 'EUR 19,50' },
+      { name: 'Vega', price: 'EUR 12,00' },
+      { name: 'Rotirol Kipfilet', price: 'EUR 10,00' },
+      { name: 'Rotirol Vega', price: 'EUR 9,00' },
+      { name: 'Blanco', price: 'EUR 3,00' },
+    ],
+  },
+  {
+    title: 'Bruine bonen met rijst',
+    items: [
+      { name: 'Ketjap Kip', price: 'EUR 14,00' },
+      { name: 'Ketjap Kipfilet', price: 'EUR 15,00' },
+      { name: 'Cha Sieuw Kip', price: 'EUR 14,00' },
+      { name: 'Cha Sieuw Kipfilet', price: 'EUR 15,00' },
+      { name: 'Pom', price: 'EUR 17,00' },
+      { name: 'Vega', price: 'EUR 13,00' },
     ],
   },
   {
     title: 'Snacks',
     items: [
-      {
-        name: 'Pastei',
-        description: 'Luchtig bladerdeeg gevuld met kruidige kip en aardappel.',
-        price: 'EUR 3,00',
-      },
-      {
-        name: 'Loempia',
-        description: 'Krokant gebakken loempia met een hartige vulling en saus erbij.',
-        price: 'EUR 4,00',
-      },
-      {
-        name: 'Bara kip',
-        description: 'Gebakken bara met malse kip, fris zuur en kruidige saus.',
-        price: 'EUR 7,00',
-      },
-      {
-        name: 'Bakabana pindasaus',
-        description: 'Zoete gebakken banaan met warme pindasaus voor de perfecte bite.',
-        price: 'EUR 4,00',
-      },
+      { name: 'Pastei', price: 'EUR 3,00' },
+      { name: 'Loempia', price: 'EUR 4,00' },
+      { name: 'Bakabana', price: 'EUR 3,00' },
+      { name: 'Bakabana pindasaus', price: 'EUR 4,00' },
+      { name: 'Bara', price: 'EUR 3,00' },
+      { name: 'Bara Kip', price: 'EUR 7,00' },
+      { name: 'Telo Bakkeljauw', price: 'EUR 7,00' },
+      { name: 'Kippenworst', price: 'EUR 7,00' },
+      { name: 'Kip Sate', price: 'EUR 7,00' },
+      { name: 'Pitjel', price: 'EUR 8,50' },
+      { name: 'Pitjel Speciaal', price: 'EUR 10,00' },
+    ],
+  },
+  {
+    title: 'Sambel',
+    items: [
+      { name: 'Ketjap', price: 'EUR 0,50' },
+      { name: 'Peper geel', price: 'EUR 0,50' },
+      { name: 'Sambel bami/nasi', price: 'EUR 0,50' },
+      { name: 'Ketchup', price: 'EUR 0,50' },
+      { name: 'Maagjes Sambel', price: 'EUR 1,00' },
+      { name: 'Sojabrokken', price: 'EUR 1,00' },
+      { name: 'Pindasaus', price: 'EUR 2,50' },
     ],
   },
   {
     title: 'Dranken',
     items: [
-      {
-        name: 'Fernandes rood of groen',
-        description: 'Surinaamse frisdrank die perfect past bij warme en kruidige gerechten.',
-        price: 'EUR 3,00',
-      },
-      {
-        name: 'Maaza mango',
-        description: 'Tropische mangodrank met volle smaak en frisse afdronk.',
-        price: 'EUR 3,00',
-      },
-      {
-        name: 'Markoesa sap',
-        description: 'Passievruchtensap met een frisse, fruitige punch.',
-        price: 'EUR 4,00',
-      },
-      {
-        name: 'Koffie of thee',
-        description: 'Een warme afsluiter na je maaltijd of snack.',
-        price: 'EUR 3,00',
-      },
+      { name: 'Cola/Cola Zero/Sprite', price: 'EUR 3,00' },
+      { name: 'Fernandes/Fanta', price: 'EUR 3,00' },
+      { name: 'Dawet', price: 'EUR 4,00' },
+      { name: 'Maaza Mango/Tropical', price: 'EUR 3,00' },
+      { name: 'Spa Blauw/Rood', price: 'EUR 3,00' },
+      { name: 'Ice Tea Green/Sparkling', price: 'EUR 3,00' },
+      { name: 'Red Bull', price: 'EUR 3,00' },
+      { name: 'Coco Kokosdrank', price: 'EUR 3,00' },
+      { name: 'Markoesa Sap', price: 'EUR 4,00' },
+      { name: 'Gemberbier', price: 'EUR 3,00' },
+      { name: 'Heineken Bier', price: 'EUR 4,00' },
+      { name: 'Wijn', price: 'EUR 5,00' },
+      { name: 'Likeur, Vodka', price: 'EUR 7,00' },
+      { name: 'Bacardi/Whiskey', price: 'EUR 7,00' },
+      { name: 'Cognac', price: 'EUR 7,00' },
+      { name: 'Koffie/Thee', price: 'EUR 3,00' },
+      { name: 'Cappucino', price: 'EUR 4,00' },
+      { name: 'Munt of Gember Thee', price: 'EUR 4,00' },
     ],
   },
   {
-    title: 'Extras',
+    title: 'Bittergarnituur',
     items: [
-      {
-        name: 'Pindasaus',
-        description: 'Romige pindasaus als extra dip of topping bij je gerecht.',
-        price: 'EUR 2,50',
-      },
-      {
-        name: 'Dhaal',
-        description: 'Vol gekruide linzen, heerlijk naast roti of rijstgerechten.',
-        price: 'EUR 5,00',
-      },
-      {
-        name: 'Bojo',
-        description: 'Zoete Surinaamse cassavecake als dessert of lekkernij.',
-        price: 'EUR 3,50',
-      },
-      {
-        name: 'Cocos ijs',
-        description: 'Fris dessert met romige kokossmaak en een tropische twist.',
-        price: 'EUR 7,00',
-      },
+      { name: 'Kip Bitterballen', price: 'EUR 8,00' },
+      { name: "Krokante Gamba's", price: 'EUR 9,00' },
+      { name: "Vega mini Loempia's", price: 'EUR 7,00' },
+    ],
+  },
+  {
+    title: 'Nagerecht',
+    items: [
+      { name: 'Bojo', price: 'EUR 3,50' },
+      { name: 'Goelong Goelong', price: 'EUR 4,50' },
+      { name: 'Cocos ijs', price: 'EUR 7,00' },
+    ],
+  },
+  {
+    title: 'Extra',
+    items: [
+      { name: 'Dhaal', price: 'EUR 5,00' },
+      { name: 'Pompoen', price: 'EUR 5,00' },
+      { name: 'Kip extra', price: 'EUR 6,00' },
+      { name: 'Bakje groente', price: 'EUR 4,00' },
+      { name: 'Bakje zuur', price: 'EUR 3,00' },
     ],
   },
 ];
 
 function slugify(value) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function SocialBrandIcon({ label }) {
+  if (label === 'Facebook') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M13.6 21v-7.6h2.6l.4-3h-3V8.5c0-.9.3-1.5 1.6-1.5h1.5V4.3c-.3 0-1.2-.1-2.4-.1-2.4 0-4 1.4-4 4.2v2h-2.7v3h2.7V21h3.3Z"
+          fill="currentColor"
+        />
+      </svg>
+    );
+  }
+
+  if (label === 'Instagram') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="4.25" y="4.25" width="15.5" height="15.5" rx="4.5" fill="none" stroke="currentColor" strokeWidth="1.9" />
+        <circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" strokeWidth="1.9" />
+        <circle cx="17.2" cy="6.9" r="1.1" fill="currentColor" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M14.3 4.2c.7.8 1.7 1.3 2.8 1.5v2.2a6 6 0 0 1-2.8-.7v6.1a5.1 5.1 0 1 1-5.1-5.1c.4 0 .8 0 1.1.1v2.3a3 3 0 1 0 1.8 2.7V3h2.2c0 .4.3.9.7 1.2Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
 }
 
 function parseHash() {
@@ -208,8 +311,13 @@ function HomePage() {
             <a className="button button--primary" href="#menu">
               Bekijk menu kaart
             </a>
-            <a className="button button--secondary" href="#home/reserveer">
-              Bestel online
+            <a
+              className="button button--secondary"
+              href={orderDetails.href}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {orderDetails.label}
             </a>
           </div>
         </div>
@@ -249,60 +357,50 @@ function HomePage() {
       </section>
 
       <section className="reserve-strip" id="reserveer">
-        <div className="section-shell reserve-strip__inner">
-          <div>
-            <p className="section-heading__eyebrow">Reserveren</p>
-            <h2>Plan je lunch, diner of afhaalbestelling</h2>
-            <p>
-              Reserveer een tafel of plaats direct een bestelling voor afhalen. Duidelijk,
-              snel en helemaal in de sfeer van Kitchen Susan.
-            </p>
-          </div>
-          <div className="reserve-strip__actions">
-            <a className="button button--primary" href="#menu">
-              Naar menu
-            </a>
-            <a className="button button--secondary" href="#home/contact">
-              Neem contact op
-            </a>
+        <div className="section-shell">
+          <div className="party-section">
+            <span className="party-section__dot party-section__dot--top" />
+            <span className="party-section__dot party-section__dot--middle" />
+            <span className="party-section__dot party-section__dot--bottom" />
+
+            <div className="party-section__frame">
+              <img src={partyBalloonsImage} alt="Suriname ballonnen in restaurant voor feestjes" />
+            </div>
+
+            <div className="party-section__content">
+              <p className="party-section__eyebrow">Kitchen Susan events</p>
+              <h2>Feestje</h2>
+              <p>
+                Vier je verjaardag, bedrijfsfeestje, borrel of feestje in ons restaurant en
+                laat alle zorgen uit handen nemen.
+              </p>
+              <p>
+                Geniet van een sfeervolle ambiance, speciaal gereserveerde ruimtes, dansvloer
+                en diverse arrangementen zoals uitgebreide diners, borrels met hapjes.
+              </p>
+            </div>
+
+            <div className="party-section__logo-wrap">
+              <img className="party-section__logo" src={logo} alt="Kitchen Susan logo" />
+            </div>
           </div>
         </div>
       </section>
 
       <section className="info-grid" id="about">
         <div className="section-shell info-grid__layout">
-          <article className="info-card">
+          <article
+            className="info-card info-card--about"
+            style={{
+              backgroundImage: `linear-gradient(180deg, rgba(6, 34, 20, 0.86), rgba(38, 8, 12, 0.82)), url(${heroImage})`,
+            }}
+          >
             <p className="section-heading__eyebrow">Over ons</p>
             <h3>Surinaamse warmte in een moderne setting</h3>
             <p>
               Kitchen Susan brengt rijke familierecepten, kruidige marinades en een warme sfeer
               samen in een verzorgde, eigentijdse uitstraling.
             </p>
-          </article>
-          <article className="info-card" id="contact">
-            <p className="section-heading__eyebrow">Contact</p>
-            <h3>Bel ons of kom langs tijdens openingstijden</h3>
-            <p>
-              Gebruik de site als centrale plek voor reserveren, bezorgen, afhalen en het
-              bekijken van de volledige menukaart.
-            </p>
-            <div className="contact-card__details">
-              <div className="contact-card__item">
-                <span className="contact-card__label">Openingstijden</span>
-                <strong>{contactDetails.hours}</strong>
-              </div>
-              <div className="contact-card__item">
-                <span className="contact-card__label">Telefoon</span>
-                <a href={contactDetails.phoneHref}>{contactDetails.phoneLabel}</a>
-              </div>
-              <div className="contact-card__item">
-                <span className="contact-card__label">WhatsApp</span>
-                <a className="contact-card__whatsapp" href={contactDetails.whatsappHref} target="_blank" rel="noreferrer">
-                  <MessageCircle size={18} />
-                  <span>{contactDetails.whatsappLabel}</span>
-                </a>
-              </div>
-            </div>
           </article>
         </div>
       </section>
@@ -372,17 +470,26 @@ function MenuPage() {
                       <h3>{item.name}</h3>
                       <span className="menu-result-card__price">{item.price}</span>
                     </div>
-                    <p>{item.description}</p>
+                    {item.description ? <p>{item.description}</p> : null}
                   </article>
                 ))}
               </div>
             </section>
           ))}
           <div className="menu-results__footer">
-            <span>Halal gerechten, sambal en zuur beschikbaar.</span>
+            <span>Al onze gerechten zijn halal, incl. sambal en zuur.</span>
             <span>Afhalen, bezorgen en catering op aanvraag.</span>
           </div>
         </section>
+
+        <a
+          className="menu-page__sticky-order button button--primary"
+          href={orderDetails.href}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {orderDetails.label}
+        </a>
       </div>
     </section>
   );
@@ -470,27 +577,94 @@ function App() {
 
       {isMenuPage ? <MenuPage /> : <HomePage />}
 
-      <footer className="site-footer-contact">
+      <footer className="site-footer-contact" id="contact">
         <div className="section-shell site-footer-contact__inner">
-          <div>
+          <div className="site-footer-contact__copy">
             <p className="section-heading__eyebrow">Contact & openingstijden</p>
             <h2>{contactDetails.hours}</h2>
           </div>
           <a className="site-footer-contact__phone" href={contactDetails.phoneHref}>
-            Telefoon: {contactDetails.phoneLabel}
+            <span className="site-footer-contact__phone-icon" aria-hidden="true">
+              <Phone size={22} />
+            </span>
+            <span className="site-footer-contact__phone-text">
+              <span className="site-footer-contact__phone-label">Telefoon</span>
+              <strong>{contactDetails.phoneLabel}</strong>
+            </span>
           </a>
+        </div>
+
+        <div className="site-footer-quicklinks">
+          <div className="site-footer-quicklinks__inner">
+            <div className="site-footer-quicklinks__group">
+              <span className="site-footer-quicklinks__label">Snel naar</span>
+              <nav className="site-footer-quicklinks__nav" aria-label="Snelle links">
+                <a href="#home">Home</a>
+                <a href="#menu">Menu</a>
+                <a href="#home/reserveer">Feestje</a>
+                <a href="#home/about">Over ons</a>
+                <a href="#home/contact">Contact</a>
+              </nav>
+            </div>
+
+            <div className="site-footer-social">
+              <span className="site-footer-quicklinks__label">Volg ons</span>
+              <div className="site-footer-social__icons" aria-label="Social media links">
+                {socialLinks.map((item) =>
+                  item.href ? (
+                    <a
+                      key={item.label}
+                      className="site-footer-social__icon"
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={item.label}
+                      title={item.label}
+                    >
+                      <SocialBrandIcon label={item.label} />
+                    </a>
+                  ) : (
+                    <span
+                      key={item.label}
+                      className="site-footer-social__icon site-footer-social__icon--inactive"
+                      aria-label={`${item.label} link volgt`}
+                      title={`${item.label} link volgt`}
+                    >
+                      <SocialBrandIcon label={item.label} />
+                    </span>
+                  ),
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </footer>
 
-      <a
-        className="floating-whatsapp"
-        href={contactDetails.whatsappHref}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Open WhatsApp chat met Kitchen Susan"
-      >
-        <MessageCircle size={28} />
-      </a>
+      {!isMenuPage && (
+        <a
+          className="floating-delivery-badge"
+          href={deliveryPartners.thuisbezorgd.href}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={deliveryPartners.thuisbezorgd.label}
+          title={deliveryPartners.thuisbezorgd.label}
+        >
+          <img src={thuisbezorgdLogo} alt="Thuisbezorgd.nl logo" />
+          <span>Thuisbezorgd</span>
+        </a>
+      )}
+
+      {!isMenuPage && (
+        <a
+          className="floating-whatsapp"
+          href={contactDetails.whatsappHref}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Open WhatsApp chat met Kitchen Susan"
+        >
+          <MessageCircle size={28} />
+        </a>
+      )}
     </div>
   );
 }
