@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, Menu, MessageCircle, Phone, ShoppingBag, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Clock3, Menu, MessageCircle, Phone, ShoppingBag, X } from 'lucide-react';
 import heroImage from './assets/728642-Suriname-Flag-Stripes.jpg';
 import hoofdgerechtOneImage from './assets/hoofdgerecht-1.png';
 import hoofdgerechtTwoImage from './assets/hoofdgerecht-2.png';
 import hoofdgerechtThreeImage from './assets/hoofdgerecht-3.png';
 import hoofdgerechtFourImage from './assets/hoofdgerecht-4.png';
 import hoofdgerechtFiveImage from './assets/hoofdgerecht-5.png';
+import broodjeImage from './assets/Broodje-1.png';
+import saotoSoepImage from './assets/soep-saoto.png';
+import snackTeloImage from './assets/snacks-1 (1).png';
+import snackLoempiaImage from './assets/snacks-1 (2).png';
+import snackBakabanaImage from './assets/snacks-1 (3).png';
 import menuHeroImage from './assets/surinaamse-loempia.jpg';
 import partyBalloonsImage from './assets/Su-ballonen.png';
 import thuisbezorgdLogo from './assets/thuisbezorgd_logo_app-e1672662946980.png';
@@ -31,6 +36,53 @@ const featuredDishes = [
   {
     title: 'Roti',
     image: hoofdgerechtFiveImage,
+  },
+];
+
+const featuredSnacks = [
+  {
+    title: 'Telo bakkeljauw',
+    image: snackTeloImage,
+  },
+  {
+    title: 'Loempia',
+    image: snackLoempiaImage,
+  },
+  {
+    title: 'Bakabana',
+    image: snackBakabanaImage,
+  },
+];
+
+const featuredBroodjesAndSoep = [
+  {
+    title: 'Belegd broodje',
+    image: broodjeImage,
+  },
+  {
+    title: 'Saoto soep',
+    image: saotoSoepImage,
+  },
+];
+
+const featuredSlideshows = [
+  {
+    id: 'hoofdgerechten',
+    label: 'Hoofdgerechten',
+    title: 'BRUINE NASI / WITTE NASI / BAMI / WITTE RIJST / ROTI',
+    items: featuredDishes,
+  },
+  {
+    id: 'broodjes-soep',
+    label: 'Broodjes & soep',
+    title: 'BELEGDE BROODJES / SAOTO SOEP',
+    items: featuredBroodjesAndSoep,
+  },
+  {
+    id: 'snacks',
+    label: 'Snacks',
+    title: 'TELO / BAKABANA / LOEMPIA / BARA / PASTEI',
+    items: featuredSnacks,
   },
 ];
 
@@ -290,22 +342,101 @@ function parseHash() {
   };
 }
 
-function HomePage() {
+function FeatureShowcase({ slideshow }) {
   const [activeDishIndex, setActiveDishIndex] = useState(0);
-  const activeDish = featuredDishes[activeDishIndex];
 
   const showPreviousDish = () => {
     setActiveDishIndex((currentIndex) =>
-      currentIndex === 0 ? featuredDishes.length - 1 : currentIndex - 1,
+      currentIndex === 0 ? slideshow.items.length - 1 : currentIndex - 1,
     );
   };
 
   const showNextDish = () => {
     setActiveDishIndex((currentIndex) =>
-      currentIndex === featuredDishes.length - 1 ? 0 : currentIndex + 1,
+      currentIndex === slideshow.items.length - 1 ? 0 : currentIndex + 1,
     );
   };
 
+  return (
+    <article className="feature-showcase" aria-roledescription="carousel" aria-label={`Slideshow ${slideshow.label}`}>
+      <div className="feature-showcase__content">
+        <div className="feature-showcase__badge">
+          <span>{slideshow.label}</span>
+          <strong>0{activeDishIndex + 1}</strong>
+        </div>
+      </div>
+
+      <div className="feature-showcase__media">
+        <div
+          className="feature-showcase__track"
+          style={{ transform: `translateX(-${activeDishIndex * 100}%)` }}
+        >
+          {slideshow.items.map((dish) => (
+            <div className="feature-showcase__slide" key={dish.title}>
+              <img src={dish.image} alt={`${slideshow.label} ${dish.title}`} />
+            </div>
+          ))}
+        </div>
+
+        <div className="feature-showcase__controls">
+          <button
+            type="button"
+            className="feature-showcase__arrow"
+            onClick={showPreviousDish}
+            aria-label={`Vorige ${slideshow.label} foto`}
+            title="Vorige"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <span>
+            {activeDishIndex + 1} / {slideshow.items.length}
+          </span>
+          <button
+            type="button"
+            className="feature-showcase__arrow"
+            onClick={showNextDish}
+            aria-label={`Volgende ${slideshow.label} foto`}
+            title="Volgende"
+          >
+            <ChevronRight size={24} />
+          </button>
+        </div>
+      </div>
+
+      <div className="feature-showcase__footer">
+        <div className="feature-showcase__dots" role="tablist" aria-label={`Kies ${slideshow.label} foto`}>
+          {slideshow.items.map((dish, index) => (
+            <button
+              key={dish.title}
+              type="button"
+              className={`feature-showcase__dot ${index === activeDishIndex ? 'feature-showcase__dot--active' : ''}`}
+              onClick={() => setActiveDishIndex(index)}
+              aria-label={`Toon ${dish.title}`}
+              aria-selected={index === activeDishIndex}
+            />
+          ))}
+        </div>
+
+        <div className="feature-showcase__actions">
+          <a
+            className="button button--primary"
+            href={orderDetails.href}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <ShoppingBag size={20} />
+            {orderDetails.label}
+          </a>
+          <a className="feature-showcase__menu-link" href="#menu">
+            Bekijk menu
+          </a>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function HomePage() {
   return (
     <>
       <section className="hero" id="home">
@@ -350,88 +481,11 @@ function HomePage() {
             </p>
           </div>
 
-          <article className="feature-showcase" aria-roledescription="carousel" aria-label="Slideshow hoofdgerechten">
-            <div className="feature-showcase__content">
-              <div className="feature-showcase__badge">
-                <span>Hoofdgerechten</span>
-                <strong>0{activeDishIndex + 1}</strong>
-              </div>
-
-              <h3>BRUINE NASI / WITTE NASI / BAMI / WITTE RIJST / ROTI</h3>
-            </div>
-
-            <div className="feature-showcase__media">
-              <div
-                className="feature-showcase__track"
-                style={{ transform: `translateX(-${activeDishIndex * 100}%)` }}
-              >
-                {featuredDishes.map((dish) => (
-                  <div className="feature-showcase__slide" key={dish.title}>
-                    <img src={dish.image} alt={`Hoofdgerecht ${dish.title}`} />
-                  </div>
-                ))}
-              </div>
-
-              <div className="feature-showcase__controls">
-                <button
-                  type="button"
-                  className="feature-showcase__arrow"
-                  onClick={showPreviousDish}
-                  aria-label="Vorige hoofdgerecht foto"
-                  title="Vorige"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-                <span>
-                  {activeDishIndex + 1} / {featuredDishes.length}
-                </span>
-                <button
-                  type="button"
-                  className="feature-showcase__arrow"
-                  onClick={showNextDish}
-                  aria-label="Volgende hoofdgerecht foto"
-                  title="Volgende"
-                >
-                  <ChevronRight size={24} />
-                </button>
-              </div>
-            </div>
-
-            <div className="feature-showcase__footer">
-              <div className="feature-showcase__current">
-                <span>Nu in beeld</span>
-                <strong>{activeDish.title}</strong>
-              </div>
-
-              <div className="feature-showcase__dots" role="tablist" aria-label="Kies hoofdgerecht foto">
-                {featuredDishes.map((dish, index) => (
-                  <button
-                    key={dish.title}
-                    type="button"
-                    className={`feature-showcase__dot ${index === activeDishIndex ? 'feature-showcase__dot--active' : ''}`}
-                    onClick={() => setActiveDishIndex(index)}
-                    aria-label={`Toon ${dish.title}`}
-                    aria-selected={index === activeDishIndex}
-                  />
-                ))}
-              </div>
-
-              <div className="feature-showcase__actions">
-                <a
-                  className="button button--primary"
-                  href={orderDetails.href}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <ShoppingBag size={20} />
-                  {orderDetails.label}
-                </a>
-                <a className="feature-showcase__menu-link" href="#menu">
-                  Bekijk menu
-                </a>
-              </div>
-            </div>
-          </article>
+          <div className="feature-showcases">
+            {featuredSlideshows.map((slideshow) => (
+              <FeatureShowcase key={slideshow.id} slideshow={slideshow} />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -467,21 +521,21 @@ function HomePage() {
       </section>
 
       <section className="info-grid" id="about">
-        <div className="section-shell info-grid__layout">
-          <article
-            className="info-card info-card--about"
-            style={{
-              backgroundImage: `linear-gradient(180deg, rgba(6, 34, 20, 0.86), rgba(38, 8, 12, 0.82)), url(${heroImage})`,
-            }}
-          >
+        <article
+          className="info-card info-card--about"
+          style={{
+            backgroundImage: `linear-gradient(90deg, rgba(6, 34, 20, 0.92), rgba(16, 17, 12, 0.82) 48%, rgba(92, 10, 22, 0.82)), url(${heroImage})`,
+          }}
+        >
+          <div className="section-shell info-card__content">
             <p className="section-heading__eyebrow">Over ons</p>
             <h3>Surinaamse warmte in een moderne setting</h3>
             <p>
               Kitchen Susan brengt rijke familierecepten, kruidige marinades en een warme sfeer
               samen in een verzorgde, eigentijdse uitstraling.
             </p>
-          </article>
-        </div>
+          </div>
+        </article>
       </section>
     </>
   );
@@ -655,16 +709,20 @@ function App() {
 
       <footer className="site-footer-contact" id="contact">
         <div className="section-shell site-footer-contact__inner">
+          <div className="site-footer-contact__mark" aria-hidden="true">
+            <span />
+            <Clock3 size={48} strokeWidth={1.8} />
+            <span />
+          </div>
           <div className="site-footer-contact__copy">
             <p className="section-heading__eyebrow">Contact & openingstijden</p>
             <h2>{contactDetails.hours}</h2>
           </div>
           <a className="site-footer-contact__phone" href={contactDetails.phoneHref}>
             <span className="site-footer-contact__phone-icon" aria-hidden="true">
-              <Phone size={22} />
+              <Phone size={42} />
             </span>
             <span className="site-footer-contact__phone-text">
-              <span className="site-footer-contact__phone-label">Telefoon</span>
               <strong>{contactDetails.phoneLabel}</strong>
             </span>
           </a>
@@ -712,6 +770,10 @@ function App() {
                 )}
               </div>
             </div>
+
+            <p className="site-footer-copyright">
+              © 2026 Kitchen Susan. Alle rechten voorbehouden.
+            </p>
           </div>
         </div>
       </footer>
