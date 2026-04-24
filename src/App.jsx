@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import {
-  Banana,
   Bean,
   ChevronLeft,
   ChevronRight,
   Clock3,
   Coffee,
   CupSoda,
+  Flame,
   IceCreamBowl,
   Menu,
   MessageCircle,
@@ -322,16 +322,21 @@ const menuCategoryTabs = [
       "Roti's": Pizza,
       'Bruine bonen met rijst': Bean,
       Snacks: Pizza,
-      Sambel: Banana,
+      Sambel: Flame,
       Dranken: CupSoda,
       Bittergarnituur: IceCreamBowl,
       Nagerecht: Coffee,
       Extra: UtensilsCrossed,
     };
 
+    const labels = {
+      'Bruine nasi / witte nasi / bami': 'Bruine / witte nasi / bami',
+    };
+
     return {
       ...category,
       icon: icons[category.title] ?? UtensilsCrossed,
+      tabLabel: labels[category.title] ?? category.title,
       isAll: false,
     };
   }),
@@ -602,6 +607,50 @@ function MenuPage() {
     element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  useEffect(() => {
+    let animationFrameId = 0;
+
+    const updateActiveCategory = () => {
+      const activationLine = window.innerHeight * 0.32;
+      const sections = menuCategories
+        .map((category) => ({
+          title: category.title,
+          element: document.getElementById(`menu-${slugify(category.title)}`),
+        }))
+        .filter((section) => section.element);
+
+      const firstSection = sections[0]?.element;
+
+      if (firstSection && firstSection.getBoundingClientRect().top > activationLine) {
+        setActiveCategory('Alle gerechten');
+        return;
+      }
+
+      const currentSection = sections
+        .filter((section) => section.element.getBoundingClientRect().top <= activationLine)
+        .at(-1);
+
+      if (currentSection) {
+        setActiveCategory(currentSection.title);
+      }
+    };
+
+    const handleScroll = () => {
+      window.cancelAnimationFrame(animationFrameId);
+      animationFrameId = window.requestAnimationFrame(updateActiveCategory);
+    };
+
+    updateActiveCategory();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
+
   return (
     <section className="menu-page" id="menu-page">
       <div className="menu-page__hero-media">
@@ -628,7 +677,7 @@ function MenuPage() {
                 onClick={() => scrollToCategory(category.title)}
               >
                 <Icon size={24} strokeWidth={2.25} />
-                <span>{category.title}</span>
+                <span>{category.tabLabel ?? category.title}</span>
               </button>
             );
           })}
