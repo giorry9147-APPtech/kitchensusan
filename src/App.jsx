@@ -1,17 +1,36 @@
 import { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, Clock3, Menu, MessageCircle, Phone, ShoppingBag, X } from 'lucide-react';
+import {
+  Banana,
+  Bean,
+  ChevronLeft,
+  ChevronRight,
+  Clock3,
+  Coffee,
+  CupSoda,
+  IceCreamBowl,
+  Menu,
+  MessageCircle,
+  Phone,
+  Pizza,
+  Salad,
+  Sandwich,
+  ShoppingBag,
+  Soup,
+  UtensilsCrossed,
+  Wheat,
+  X,
+} from 'lucide-react';
 import heroImage from './assets/728642-Suriname-Flag-Stripes.jpg';
 import hoofdgerechtOneImage from './assets/hoofdgerecht-1.png';
 import hoofdgerechtTwoImage from './assets/hoofdgerecht-2.png';
 import hoofdgerechtThreeImage from './assets/hoofdgerecht-3.png';
-import hoofdgerechtFourImage from './assets/hoofdgerecht-4.png';
 import hoofdgerechtFiveImage from './assets/hoofdgerecht-5.png';
 import broodjeImage from './assets/Broodje-1.png';
 import saotoSoepImage from './assets/soep-saoto.png';
 import snackTeloImage from './assets/snacks-1 (1).png';
 import snackLoempiaImage from './assets/snacks-1 (2).png';
 import snackBakabanaImage from './assets/snacks-1 (3).png';
-import menuHeroImage from './assets/surinaamse-loempia.jpg';
+import menuHeroImage from './assets/IMG_8353.PNG';
 import partyBalloonsImage from './assets/Su-ballonen.png';
 import thuisbezorgdLogo from './assets/thuisbezorgd_logo_app-e1672662946980.png';
 import logo from './assets/SUSANLOGO1.png';
@@ -28,10 +47,6 @@ const featuredDishes = [
   {
     title: 'Bami',
     image: hoofdgerechtThreeImage,
-  },
-  {
-    title: 'Witte rijst',
-    image: hoofdgerechtFourImage,
   },
   {
     title: 'Roti',
@@ -292,6 +307,36 @@ const menuCategories = [
   },
 ];
 
+const menuCategoryTabs = [
+  {
+    title: 'Alle gerechten',
+    icon: UtensilsCrossed,
+    isAll: true,
+  },
+  ...menuCategories.map((category) => {
+    const icons = {
+      'Belegde broodjes': Sandwich,
+      Soepen: Soup,
+      'Bruine nasi / witte nasi / bami': Salad,
+      'Witte rijst met groenten': Wheat,
+      "Roti's": Pizza,
+      'Bruine bonen met rijst': Bean,
+      Snacks: Pizza,
+      Sambel: Banana,
+      Dranken: CupSoda,
+      Bittergarnituur: IceCreamBowl,
+      Nagerecht: Coffee,
+      Extra: UtensilsCrossed,
+    };
+
+    return {
+      ...category,
+      icon: icons[category.title] ?? UtensilsCrossed,
+      isAll: false,
+    };
+  }),
+];
+
 function slugify(value) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
@@ -542,10 +587,17 @@ function HomePage() {
 }
 
 function MenuPage() {
-  const [activeCategory, setActiveCategory] = useState(menuCategories[0].title);
+  const [activeCategory, setActiveCategory] = useState(menuCategoryTabs[0].title);
 
   const scrollToCategory = (title) => {
     setActiveCategory(title);
+
+    if (title === 'Alle gerechten') {
+      const element = document.querySelector('.menu-results');
+      element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
     const element = document.getElementById(`menu-${slugify(title)}`);
     element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
@@ -553,7 +605,7 @@ function MenuPage() {
   return (
     <section className="menu-page" id="menu-page">
       <div className="menu-page__hero-media">
-        <img src={menuHeroImage} alt="Surinaamse loempia als menu hero" />
+        <img src={menuHeroImage} alt="Kitchen Susan menu hero" />
         <div className="menu-page__hero-media-overlay" />
       </div>
       <div className="section-shell menu-page__shell">
@@ -561,24 +613,25 @@ function MenuPage() {
           <div>
             <p className="section-heading__eyebrow">Kitchen Susan menu</p>
             <h1>Menukaart</h1>
-            <p>
-              Kies direct een categorie en zie de gerechten meteen verschijnen. Geen lange scroll
-              eerst, maar gelijk de inhoud zoals in je voorbeeld.
-            </p>
           </div>
         </div>
 
         <div className="menu-page__tabs" role="tablist" aria-label="Menucategorieen">
-          {menuCategories.map((category) => (
-            <button
-              key={category.title}
-              type="button"
-              className={`menu-pill ${category.title === activeCategory ? 'menu-pill--active' : ''}`}
-              onClick={() => scrollToCategory(category.title)}
-            >
-              {category.title}
-            </button>
-          ))}
+          {menuCategoryTabs.map((category) => {
+            const Icon = category.icon;
+
+            return (
+              <button
+                key={category.title}
+                type="button"
+                className={`menu-pill ${category.title === activeCategory ? 'menu-pill--active' : ''}`}
+                onClick={() => scrollToCategory(category.title)}
+              >
+                <Icon size={24} strokeWidth={2.25} />
+                <span>{category.title}</span>
+              </button>
+            );
+          })}
         </div>
 
         <section className="menu-results">
@@ -621,7 +674,7 @@ function MenuPage() {
           target="_blank"
           rel="noreferrer"
         >
-          {orderDetails.label}
+          Klik om te bestellen
         </a>
       </div>
     </section>
